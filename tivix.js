@@ -1,7 +1,7 @@
 /**
  * FMovies plugin for Movian Media Center
  *
- *  Copyright (C) 2018 lprot
+ *  Copyright (C) 2020 czz78
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
