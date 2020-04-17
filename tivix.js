@@ -192,17 +192,21 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 
 
 new page.Route(plugin.id + ":start", function(page) {
+
     setPageHeader(page, plugin.synopsis);
     page.loading = true;
 
-    var p=1; var loop = true;
-    while(loop==true){
-        doc = http.request(service.baseURL+"/page/"+p , {
+    var page_number = 1, try_to_load = true, total = 0;
+
+    function loader() {
+
+        if(!try_to_load){ return false; }
+
+        doc = http.request(service.baseURL+"/page/"+page_number , {
             headers: {
                 'User-Agent': UA
             }
         }).toString();
-
 
         /*
         <div class="all_tv" title="UFC HD">
@@ -212,25 +216,24 @@ new page.Route(plugin.id + ":start", function(page) {
 
         var s =  new RegExp('<div class="all_tv" title="([^"]+)"><a href="([^"]+)" title="([^"]+)"><img src="([^"]+)"></a></div>', 'gi');
         var match;
-        var result=[];
+
         while (match = s.exec(trim(doc))) {
-            result.push({match: match[0], link: match[2], title: match[3], icon: match[4]});
-
-
            page.appendItem(plugin.id + ':play:'+ encodeURIComponent(match[3]) + ':' + encodeURIComponent(match[2]) + ':' + encodeURIComponent(service.baseURL+ match[4]) , 'directory', {title:match[3], icon: service.baseURL+ match[4]} );
-
+           setPageHeader(page, plugin.synopsis + " " + (total++).toString());
         }
 
         // get next page
-        s = new RegExp('<a href="http://tivix.co/page/'+(p+1)+'\/">'+(p+1)+'</a>','g');
+        s = new RegExp('<a href="http://tivix.co/page/'+(page_number + 1)+'\/">' + (page_number + 1) + '</a>','g');
         match = s.exec(doc);
 
         console.log(match);
-        if(match) p=p+1;
-        else loop=false;
+        if(match) page_number++;
+        else try_to_load = false;
 
     }
 
+    loader();
     page.loading = false;
+    page.paginator = loader;
 
 });
