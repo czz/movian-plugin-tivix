@@ -202,7 +202,7 @@ new page.Route(plugin.id + ":start", function(page) {
 
         if(!try_to_load){ return false; }
 
-        doc = http.request(service.baseURL+"/page/"+page_number , {
+        doc = http.request(page_number=1 ? service.baseURL : service.baseURL+"/page/"+page_number , {
             headers: {
                 'User-Agent': UA
             }
