@@ -76,7 +76,12 @@ function decoder(x){
     var a = x.substring(2,x.length);
     var file3_separator = '\/\/';
     // bk0, bk1...bk4
-    var bk = ['3d4788f5-ef50-4329-afb6-c400ae0897fa', '44d1e467-f246-4669-92e1-8ee6b6b3b314', '970e632e-2d80-47c9-85e3-2910c42cb8df', '33f3b87a-1c7c-4076-a689-55c56a6d09d7', 'ce2173f7-f004-4699-afbd-c10747362fd4'];
+        var bk = [
+        'a60098ff-5638-4112-8508-e412c2f3f27f',
+        '5de6a8a5-a367-4476-b4de-e4d63c14d30d',
+        '19202e40-a6d3-425d-bc0d-2fdf01ff3a8f',
+        '90944160-2d81-4756-a925-7cb6a8cbb09a',
+        '66c37da2-cef5-4863-bccb-675cdb6b73b0'];
 
     for (var k=bk.length; k>=0; k-- ){
 
