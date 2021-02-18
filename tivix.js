@@ -90,7 +90,7 @@ function clearUrl(url_code) {
         }
         var key1 = url_code.substr(pos_begin_musor, size_musor_symbols+2);
 
-        console.log("key=",key1);
+       // console.log("key=",key1);
         if (key1.substr(2).indexOf(const_begin_musor.substr(1)) !== -1) {
             begin_find = begin_find+1;
             continue;
@@ -179,21 +179,21 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 
 //http://50.7.144.155:8081/h2/index.m3u8?wmsAuthSign=1583182087Sdf494e2f92759e55d0454fdc2c00171dS69h471h06h28
 
-    var s = new RegExp("var firstIpProtect = '([^']+)';","g");
+    var s = new RegExp("var firstIpProtect.*?'([^']+)';","g");
     var match = s.exec(trim(doc));
     var fip='';
     if(match){
        fip=match[1];
     }
 
-    s = new RegExp("var secondIpProtect = '([^']+)';","g");
+    s = new RegExp("var secondIpProtect.*?'([^']+)';","g");
     match = s.exec(trim(doc));
     var sip='';
     if(match){
        sip=match[1];
     }
 
-    s = new RegExp("var portProtect = '([^']+)';","g");
+    s = new RegExp("var portProtect.*?'([^']+)';","g");
     match = s.exec(trim(doc));
     var port='';
     if(match){
@@ -201,7 +201,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
     }
 
 
-    s = new RegExp('id:"myTabContent", file:"([^"]+)"','gm');
+    s = new RegExp('id:"myTabContent", file:.*?"([^"]+)"','gm');
     match = s.exec(trim(doc));
     var file='';
     if(match) {

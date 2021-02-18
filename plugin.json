@@ -4,12 +4,12 @@
 	"homepage": "http://github.com/czz/movian-plugin-tivix",
 	"title": "Tivix",
 	"synopsis": "Tivix",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"file": "tivix.js",
 	"showtimeVersion": "5.0.100",
 	"type": "ecmascript",
 	"icon": "logo.png",
 	"id": "tivix",
 	"category": "video",
-        "apiversion": 2
+    "apiversion": 2
 }
