@@ -71,25 +71,67 @@ function trim(s) {
 }
 
 
-function decoder(x){
+function clearUrl(url_code) {
+
+    var const_begin_musor = "//";
+    var size_musor_symbols = 48;
+    var musor_keys = [];
+    url_code = url_code.replace("#2","");
+    var begin_find = 0;
+
+    while(true){
+
+        if(url_code.indexOf(const_begin_musor) === -1) break;
+        var pos_begin_musor = url_code.indexOf(const_begin_musor, begin_find);
+        console.log("pos_begin_musor=",pos_begin_musor);
+        if(!pos_begin_musor > 0) {
+            begin_find = 0;
+            continue;
+        }
+        var key1 = url_code.substr(pos_begin_musor, size_musor_symbols+2);
+
+        console.log("key=",key1);
+        if (key1.substr(2).indexOf(const_begin_musor.substr(1)) !== -1) {
+            begin_find = begin_find+1;
+            continue;
+        }
+
+        var check = false;
+        for(var i=0; i < musor_keys.length; i++) {
+          if(musor_keys[i] == key1) check = true;
+        }
+
+        if(!check) musor_keys.push(key1);
+        url_code = url_code.replace(key1, "");
+        begin_find = 0;
+        continue;
+    }
+
+    return url_code
+
+}
+
+
+function decoder(x) {
 
     var a = x.substring(2,x.length);
     var file3_separator = '\/\/';
     // bk0, bk1...bk4
-        var bk = [
+/*        var bk = [
         'a60098ff-5638-4112-8508-e412c2f3f27f',
         '5de6a8a5-a367-4476-b4de-e4d63c14d30d',
         '19202e40-a6d3-425d-bc0d-2fdf01ff3a8f',
         '90944160-2d81-4756-a925-7cb6a8cbb09a',
         '66c37da2-cef5-4863-bccb-675cdb6b73b0'];
-
     for (var k=bk.length; k>=0; k-- ){
-
         var e=encodeURIComponent(bk[k]);
         var b = file3_separator + Duktape.enc('base64', e);
         a = a.replace(b,'');
     }
 
+    var a = clearUrl(x);
+*/
+    var a = clearUrl(x);
     try {
         var template = Duktape.dec('base64',a);
     }
