@@ -1,5 +1,5 @@
 /**
- * FMovies plugin for Movian Media Center
+ * Tivix plugin for Movian Media Center
  *
  *  Copyright (C) 2020 czz78
  *
@@ -143,7 +143,6 @@ function decoder(x) {
 }
 
 
-
 new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, icon) {
 
     setPageHeader(page, decodeURIComponent(title));
@@ -238,7 +237,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 
 
 
-new page.Route(plugin.id + ":start", function(page) {
+new page.Route(plugin.id + ":channels:(.*)", function(page, path) {
 
     setPageHeader(page, plugin.synopsis);
     page.loading = true;
@@ -249,7 +248,7 @@ new page.Route(plugin.id + ":start", function(page) {
 
         if(!try_to_load){ return false; }
 
-        doc = http.request(page_number=1 ? service.baseURL : service.baseURL+"/page/"+page_number , {
+        doc = http.request(page_number=1 ? service.baseURL+decodeURIComponent(path) : service.baseURL+encodeURIComponent(path)+"/page/"+page_number , {
             headers: {
                 'User-Agent': UA
             }
@@ -282,5 +281,46 @@ new page.Route(plugin.id + ":start", function(page) {
     loader();
     page.loading = false;
     page.paginator = loader;
+
+});
+
+
+
+
+new page.Route(plugin.id + ":start", function(page) {
+
+    setPageHeader(page, plugin.synopsis);
+
+    page.loading = true;
+
+
+    const menu = [
+                  {title: 'Все каналы', icon: Plugin.path+ "images/livetv.png", path: "/"},
+                  {title: 'Развлекательные', icon: Plugin.path+ "images/livetv.png", path: "/razvlekatelnyye_kanaly"},
+                  {title: 'Популярные', icon: Plugin.path+ "images/livetv.png", path: "/populyarnyye_kanaly"},
+                  {title: 'Новостные', icon: Plugin.path+ "images/livetv.png", path: "/novostnye_kanaly"},
+                  {title: 'Музыкальные', icon: Plugin.path+ "images/livetv.png", path: "/muzykalnye_kanaly"},
+                  {title: 'Фильмы, сериалы', icon: Plugin.path+ "images/livetv.png", path: "/kino_serialy"},
+                  {title: 'Детские', icon: Plugin.path+ "images/livetv.png", path: "/detskie_kanaly"},
+                  {title: 'Православные', icon: Plugin.path+ "images/livetv.png", path: "/pravoslavnyye_kanaly"},
+                  {title: 'Футбольные', icon: Plugin.path+ "images/livetv.png", path: "/futbolnye_kanaly"},
+                  {title: 'Образовательные', icon: Plugin.path+ "images/livetv.png", path: "/obrazovatelnye_kanaly"},
+                  {title: 'Спортивные', icon: Plugin.path+ "images/livetv.png", path: "/sportivnye_kanaly"},
+                  {title: 'Спутниковые', icon: Plugin.path+ "images/livetv.png", path: "/sputnikovye_kanaly"},
+                  {title: 'HD каналы', icon: Plugin.path+ "images/livetv.png", path: "/hd_kanaly"},
+                  {title: 'Торрент тв', icon: Plugin.path+ "images/livetv.png", path: "/torrent_kanaly"},
+                  {title: 'Мобильное тв', icon: Plugin.path+ "images/livetv.png", path: "/mobile_tv"},
+                  {title: 'Русское тв', icon: Plugin.path+ "images/livetv.png", path: "/russkie_kanaly"},
+                  {title: 'Украинское тв', icon: Plugin.path+ "images/livetv.png", path: "/ukrainskie_kanaly"},
+                  {title: 'Белорусское тв', icon: Plugin.path+ "images/livetv.png", path: "/belorusskiye_kanaly"},
+                  {title: 'Английское тв', icon: Plugin.path+ "images/livetv.png", path: "/angliskie_kanaly"}
+                 ];
+
+    for(var i = 0; i < menu.length; i++) {
+        page.appendItem(plugin.id + ':channels:'+encodeURIComponent(menu[i].path) , 'directory', menu[i] );
+        setPageHeader(page, plugin.synopsis + " " + (i).toString());
+    }
+
+    page.loading = false;
 
 });
