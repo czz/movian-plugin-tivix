@@ -240,7 +240,6 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 new page.Route(plugin.id + ":channels:(.*)", function(page, path) {
 
     setPageHeader(page, plugin.synopsis);
-    page.loading = true;
 
     var page_number = 1, try_to_load = true, total = 0;
 
@@ -248,11 +247,18 @@ new page.Route(plugin.id + ":channels:(.*)", function(page, path) {
 
         if(!try_to_load){ return false; }
 
-        doc = http.request(page_number=1 ? service.baseURL+decodeURIComponent(path) : service.baseURL+encodeURIComponent(path)+"/page/"+page_number , {
+            page.loading = true;
+
+
+        doc = trim(http.request(page_number=1 ? service.baseURL+decodeURIComponent(path) : service.baseURL+encodeURIComponent(path)+"/page/"+page_number , {
             headers: {
                 'User-Agent': UA
             }
-        }).toString();
+        }).toString());
+
+        page.loading = false;
+
+
 
         /*
         <div class="all_tv" title="UFC HD">
@@ -261,11 +267,12 @@ new page.Route(plugin.id + ":channels:(.*)", function(page, path) {
         */
 
         var s =  new RegExp('<div class="all_tv" title="([^"]+)"><a href="([^"]+)" title="([^"]+)"><img src="([^"]+)"></a></div>', 'gi');
-        var match;
+        var match =  s.exec(doc);
 
-        while (match = s.exec(trim(doc))) {
-           page.appendItem(plugin.id + ':play:'+ encodeURIComponent(match[3]) + ':' + encodeURIComponent(match[2]) + ':' + encodeURIComponent(service.baseURL+ match[4]) , 'directory', {title:match[3], icon: service.baseURL+ match[4]} );
-           setPageHeader(page, plugin.synopsis + " " + (total++).toString());
+        while (match) {
+            page.appendItem(plugin.id + ':play:'+ encodeURIComponent(match[3]) + ':' + encodeURIComponent(match[2]) + ':' + encodeURIComponent(service.baseURL+ match[4]) , 'directory', {title:match[3], icon: service.baseURL+ match[4]} );
+            setPageHeader(page, plugin.synopsis + " " + (total++).toString());
+            match = s.exec(doc);
         }
 
         // get next page
@@ -279,8 +286,8 @@ new page.Route(plugin.id + ":channels:(.*)", function(page, path) {
     }
 
     loader();
-    page.loading = false;
     page.paginator = loader;
+    page.loading = false;
 
 });
 
