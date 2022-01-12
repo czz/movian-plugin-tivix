@@ -200,7 +200,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
     }
 
 
-    s = new RegExp('id:"myTabContent", file:.*?"([^"]+)"','gm');
+    s = new RegExp('id:"myTabContent",.*?file.*?"([^"]+)"','gm');
     match = s.exec(trim(doc));
     var file='';
     if(match) {
