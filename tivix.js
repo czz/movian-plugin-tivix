@@ -202,7 +202,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
        sip=match[1];
     }
 
-    s = /secondIpProtect[\s\S]+var portProtect.*?'([^']+)';/gm;
+    s = /portProtect[\s\S]+var portProtect.*?'([^']+)';/gm;
     match = s.exec(trim(doc));
     var port='';
     if(match){
