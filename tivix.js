@@ -36,6 +36,17 @@ RichText.prototype.toRichString = function(x) {
 
 var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36';
 
+io.httpInspectorCreate('http.*tivix.co.*', function(ctrl) {
+    ctrl.setHeader('User-Agent', UA);
+    return 0;
+});
+
+io.httpInspectorCreate('http.*ttranslit.com.*', function(ctrl) {
+    ctrl.setHeader('User-Agent', UA);
+    ctrl.setHeader('Referer','http://tv.tivix.co/');
+    return 0;
+});
+
 var blue = '6699CC', orange = 'FFA500', red = 'EE0000', green = '008B45';
 function coloredStr(str, color) {
     return '<font color="' + color + '">' + str + '</font>';
@@ -177,22 +188,21 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 */
 
 //http://50.7.144.155:8081/h2/index.m3u8?wmsAuthSign=1583182087Sdf494e2f92759e55d0454fdc2c00171dS69h471h06h28
-
-    var s = new RegExp("var firstIpProtect.*?'([^']+)';","g");
+    var s = /firstIpProtect[\s\S]+var firstIpProtect.*?'([^']+)';/gm;
     var match = s.exec(trim(doc));
     var fip='';
     if(match){
        fip=match[1];
     }
 
-    s = new RegExp("var secondIpProtect.*?'([^']+)';","g");
+    s = /secondIpProtect[\s\S]+var secondIpProtect.*?'([^']+)';/gm;
     match = s.exec(trim(doc));
     var sip='';
     if(match){
        sip=match[1];
     }
 
-    s = new RegExp("var portProtect.*?'([^']+)';","g");
+    s = /portProtect[\s\S]+var portProtect.*?'([^']+)';/gm;
     match = s.exec(trim(doc));
     var port='';
     if(match){
@@ -200,7 +210,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
     }
 
 
-    s = new RegExp('id:"myTabContent",.*?file.*?"([^"]+)"','gm');
+    s = /id:"myTabContent",.*?file.*?"([^"]+)"/gm;
     match = s.exec(trim(doc));
     var file='';
     if(match) {
@@ -301,7 +311,7 @@ new page.Route(plugin.id + ":start", function(page) {
     page.loading = true;
 
 
-    const menu = [
+    var menu = [
                   {title: 'Все каналы', icon: Plugin.path+ "images/livetv.png", path: "/"},
                   {title: 'Развлекательные', icon: Plugin.path+ "images/livetv.png", path: "/razvlekatelnyye_kanaly"},
                   {title: 'Популярные', icon: Plugin.path+ "images/livetv.png", path: "/populyarnyye_kanaly"},
