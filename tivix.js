@@ -28,11 +28,11 @@ var logo = Plugin.path + plugin.icon;
 
 RichText = function(x) {
     this.str = x.toString();
-}
+};
 
 RichText.prototype.toRichString = function(x) {
     return this.str;
-}
+};
 
 var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36';
 
@@ -94,14 +94,14 @@ function clearUrl(url_code) {
 
         if(url_code.indexOf(const_begin_musor) === -1) break;
         var pos_begin_musor = url_code.indexOf(const_begin_musor, begin_find);
-        console.log("pos_begin_musor=",pos_begin_musor);
+        //console.log("pos_begin_musor=",pos_begin_musor);
         if(!pos_begin_musor > 0) {
             begin_find = 0;
             continue;
         }
         var key1 = url_code.substr(pos_begin_musor, size_musor_symbols+2);
 
-       // console.log("key=",key1);
+       //console.log("key=",key1);
         if (key1.substr(2).indexOf(const_begin_musor.substr(1)) !== -1) {
             begin_find = begin_find+1;
             continue;
@@ -188,26 +188,33 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
 */
 
 //http://50.7.144.155:8081/h2/index.m3u8?wmsAuthSign=1583182087Sdf494e2f92759e55d0454fdc2c00171dS69h471h06h28
-    var s = /firstIpProtect[\s\S]+var firstIpProtect.*?'([^']+)';/gm;
-    var match = s.exec(trim(doc));
-    var fip='';
-    if(match){
-       fip=match[1];
-    }
+    // var s = /firstIpProtect[\s\S]+var firstIpProtect.*?'([^']+)';/gm;
+    // var match = s.exec(trim(doc));
+    // var fip='';
+    // if(match){
+    //    fip=match[1];
+    // }
 
-    s = /secondIpProtect[\s\S]+var secondIpProtect.*?'([^']+)';/gm;
-    match = s.exec(trim(doc));
-    var sip='';
-    if(match){
-       sip=match[1];
-    }
+    // s = /secondIpProtect[\s\S]+var secondIpProtect.*?'([^']+)';/gm;
+    // match = s.exec(trim(doc));
+    // var sip='';
+    // if(match){
+    //    sip=match[1];
+    // }
 
-    s = /portProtect[\s\S]+var portProtect.*?'([^']+)';/gm;
-    match = s.exec(trim(doc));
-    var port='';
-    if(match){
-       port=match[1];
+    // s = /portProtect[\s\S]+var portProtect.*?'([^']+)';/gm;
+    // match = s.exec(trim(doc));
+    // var port='';
+    // if(match){
+    //    port=match[1];
+    // }
+    regex = /<script>([\s\S]{0,500}firstIpProtect[\s\S]+?)var player/gm;
+    var match = regex.exec(doc);
+    console.error(trim(match[1]));
+    if (match){
+        eval(trim(match[1]));
     }
+    
 
 
     s = /id:"myTabContent",.*?file.*?"([^"]+)"/gm;
@@ -217,7 +224,7 @@ new page.Route(plugin.id + ":play:(.*):(.*):(.*)", function(page, title, url, ic
         file=decoder(match[1]);
     }
 
-    var link = file.toString().replace("{v1}",fip).replace("{v2}",sip).replace("{v3}",port);
+    var link = file.toString().replace("{v1}",firstIpProtect).replace("{v2}",secondIpProtect).replace("{v3}",portProtect);
 
    //curl 'http://50.7.144.155:8081/h2/tracks-1,2/index.m3u8?wmsAuthSign=1583209652S9da760461c3d8815efcabcceff69ccbdS76h932h12h97' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0' -H 'Accept: */*' -H 'Accept-Language: it,en-US;q=0.7,en;q=0.3' --compressed -H 'Referer: http://tivix.co/436-history-2.html' -H 'Origin: http://tivix.co' -H 'Connection: keep-alive'
 
@@ -341,3 +348,7 @@ new page.Route(plugin.id + ":start", function(page) {
     page.loading = false;
 
 });
+
+function atob(str) {
+    return Duktape.dec('base64',str);
+}
